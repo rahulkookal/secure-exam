@@ -1,0 +1,2 @@
+GET http://localhost:8080/exam?id=67b6eba1ca5416d38565f1e7
+Content-Type: application/json

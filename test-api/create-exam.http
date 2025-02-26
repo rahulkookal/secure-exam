@@ -1,0 +1,13 @@
+POST http://localhost:8080/exam
+Content-Type: application/json
+
+{
+  "title": "Golang Advanced Exam",
+  "description": "An exam covering advanced concepts in Golang, including concurrency and design patterns.",
+  "duration": 90,
+  "start_time": "2025-02-21T10:00:00Z",
+  "end_time": "2025-02-21T11:30:00Z",
+  "max_question": 50
+}
+
+

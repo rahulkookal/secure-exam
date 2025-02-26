@@ -1,0 +1,11 @@
+POST http://localhost:8080/exam/question
+Content-Type: application/json
+
+{
+  "exam_id": "67bf19a3394d3cf03ee75fd2",
+  "question_text": "What is the output of fmt.Println(2 + 2)?",
+  "options": ["3", "4", "5"],
+  "correct_answers": [1],
+  "is_multi_select": false
+}
+
