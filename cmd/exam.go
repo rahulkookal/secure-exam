@@ -5,10 +5,12 @@ package cmd
 
 import (
 	"fmt"
+	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
-	"rahul.com/secure-exam/internal/handlers"
+	"rahul.com/secure-exam/internal/routes"
 )
 
 // examCmd represents the exam command
@@ -29,11 +31,16 @@ var examCmd = &cobra.Command{
 
 func runServer() {
 	server := gin.Default()
-	server.GET("/ping", handlers.GetExams)
-	server.GET("/exams", handlers.GetExams)
-	server.POST("/exam", handlers.CreateExams)
-	server.POST("/exam/question", handlers.CreateQuestion)
-	server.GET("/exam", handlers.GetExamByID)
+	server.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"}, // Update with your frontend URL
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
+	routes.RegisterExamRoutes(server)
+	routes.RegisterUserRoutes(server)
+	routes.RegisterEventRoutes(server)
 
 	server.Run(":8080")
 }

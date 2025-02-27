@@ -1,0 +1,17 @@
+POST http://localhost:8080/event
+Content-Type: application/json
+Authorization: Bearer <your_jwt_token_here>
+
+{
+  "exam_id": "65d95d24f1a2b3c4d5e6f7g8",
+  "user_id": "65d95d24f1a2b3c4d5e6f7g9",
+  "status": "STARTED",
+  "score": 0,
+  "started_at": "2025-02-26T10:30:00Z",
+  "answers": {
+    "65d95d24f1a2b3c4d5e6f7h1": 2
+  },
+  "attempts": {
+    "65d95d24f1a2b3c4d5e6f7h1": "A"
+  }
+}

@@ -11,7 +11,7 @@ type Exam struct {
 	Title       string             `bson:"title" json:"title" binding:"required"`
 	Description string             `bson:"description" json:"description" binding:"required"`
 	Duration    int                `bson:"duration" json:"duration" binding:"required"` // In minutes
-	StartTime   time.Time          `bson:"start_time" json:"start_time" binding:"required"`
-	EndTime     time.Time          `bson:"end_time" json:"end_time" binding:"required"`
+	ValidFrom   time.Time          `bson:"valid_from" json:"valid_from" binding:"required"`
+	ValidTill   time.Time          `bson:"valid_till" json:"valid_till" binding:"required"`
 	MaxQuestion int                `bson:"max_question" json:"max_question" binding:"required"`
 }
