@@ -1,9 +1,9 @@
 POST http://localhost:8080/exam/
 Content-Type: application/json
-authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG4uZG9lMXFAZXhhbXBsZS5jb20iLCJleHAiOjE3NDA3MjkxMjEsImlzX2FkbWluIjpmYWxzZSwidXNlcl9pZCI6IjY3YzAwMjI5MGNlOTE0ZTM5ZWU4MzA4ZCJ9.Bdr6zYaxLPhFKdeHIgW_oBOEumPusyh847IozA-kccU
+authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG4uZG9lMUBleGFtcGxlLmNvbSIsImV4cCI6MTc0MDgxMzQzOCwiaXNfYWRtaW4iOmZhbHNlLCJ1c2VyX2lkIjoiNjdjMTYyZGY2OGM0MzdmNTg4ZmNiYmQzIn0.HLsXW3j-n49CyaT0Q3_gbuUarnN2AHQk-zRZPOwmBB8
 
 {
-  "title": "Golang Advanced Exam",
+  "title": "Golang Advanced Exam 2",
   "description": "An exam covering advanced concepts in Golang, including concurrency and design patterns.",
   "duration": 90,
   "valid_from": "2025-02-21T10:00:00Z",

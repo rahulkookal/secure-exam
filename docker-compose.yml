@@ -1,0 +1,22 @@
+# Use root/example as user/password credentials
+
+services:
+
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+  server:
+    build: .
+    depends_on:
+      - mongo
+    ports:
+      - 8080:8080
+    environment:
+      MONGO_URL: mongodb://root:example@mongo:27017/?authSource=admin
+
+    
