@@ -1,12 +1,14 @@
 POST http://localhost:8080/exam/
 Content-Type: application/json
-authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG4uZG9lMUBleGFtcGxlLmNvbSIsImV4cCI6MTc0MDgxMzQzOCwiaXNfYWRtaW4iOmZhbHNlLCJ1c2VyX2lkIjoiNjdjMTYyZGY2OGM0MzdmNTg4ZmNiYmQzIn0.HLsXW3j-n49CyaT0Q3_gbuUarnN2AHQk-zRZPOwmBB8
+authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG4uZG9lQGV4YW1wbGUuY29tIiwiZXhwIjoxNzQyNTc5OTIzLCJyb2xlIjoiQURNSU4iLCJ1c2VyX2lkIjoiNjdkYzU0YzA1NjA1ODU3Njc2NzI1ZDg4In0.7xWcZ0I4MGYB4zptr2rpJbVA4YdpHimaypTIuNlmw2E
 
 {
-  "title": "Golang Advanced Exam 2",
-  "description": "An exam covering advanced concepts in Golang, including concurrency and design patterns.",
-  "duration": 90,
-  "valid_from": "2025-02-21T10:00:00Z",
-  "valid_till": "2025-02-21T11:30:00Z",
-  "max_question": 50
+  "title": "Sample Exam",
+  "description": "This is a sample exam for testing purposes.",
+  "duration": 60,
+  "valid_from": "2025-04-01T09:00:00Z",
+  "valid_till": "2025-04-30T18:00:00Z",
+  "number_of_questions": 50,
+  "organisation_id": "67dc54745605857676725d88",
+  "is_deleted": false
 }

@@ -1,12 +1,11 @@
 POST http://localhost:8080/exam/question
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG4uZG9lMUBleGFtcGxlLmNvbSIsImV4cCI6MTc0MDcxMTYwMywiaXNfYWRtaW4iOmZhbHNlLCJ1c2VyX2lkIjoiNjdiZmQ1MWZmZDhjYjY5NTc1ZmY3ZGY5In0.dQJxE3i59DEpB7-4QRfJM6izVpnjmWGAcdkHNJFadJk
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG4uZG9lQGV4YW1wbGUuY29tIiwiZXhwIjoxNzQyNTgwOTc2LCJvcmdhbmlzYXRpb25faWQiOiI2N2RjNTQ3NDU2MDU4NTc2NzY3MjVkODciLCJyb2xlIjoiQURNSU4iLCJ1c2VyX2lkIjoiNjdkYzU0YzA1NjA1ODU3Njc2NzI1ZDg4In0.gfxiPh-IG3PjnVE6zq7jJIL8mdkkPHRiaEyVXt4JipE
 
 {
-  "exam_id": "67bf19a3394d3cf03ee75fd2",
+  "exam_id": "67dc58b044205e5a65ee91b8",
   "question_text": "What is the output of fmt.Println(2 + 2)?",
   "options": ["3", "4", "5"],
-  "correct_answers": [1],
+  "correct_answers": ["4"],
   "is_multi_select": false
 }
-

@@ -1,0 +1,11 @@
+
+POST http://localhost:8080/organisation/
+Content-Type: application/json
+authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG4uZG9lMUBleGFtcGxlLmNvbSIsImV4cCI6MTc0MDgxMzQzOCwiaXNfYWRtaW4iOmZhbHNlLCJ1c2VyX2lkIjoiNjdjMTYyZGY2OGM0MzdmNTg4ZmNiYmQzIn0.HLsXW3j-n49CyaT0Q3_gbuUarnN2AHQk-zRZPOwmBB8
+
+{
+  "name": "Tech Solutions Pvt Ltd",
+  "email": "contact@techsolutions.com",
+  "phone": "+1234567890",
+  "address": "123, Silicon Valley, CA"
+}

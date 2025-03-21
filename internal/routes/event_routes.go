@@ -9,6 +9,6 @@ import (
 func RegisterEventRoutes(server *gin.Engine) {
 	examRoutes := server.Group("/event")
 	{
-		examRoutes.POST("/", auth.AuthMiddleware(), handlers.CreateExams)
+		examRoutes.POST("/", auth.AuthMiddleware(), handlers.CreateEvent)
 	}
 }

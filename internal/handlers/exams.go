@@ -13,7 +13,24 @@ import (
 var examRepo = repository.NewMongoRepository("secure-exam", "exams")
 
 func GetExams(ctx *gin.Context) {
-	exams, err := examRepo.GetExams()
+	/// Retrieve organisation_id from context
+	orgIDValue, exists := ctx.Get("organisation_id")
+	if !exists {
+		ctx.JSON(http.StatusForbidden, gin.H{"error": "Organisation ID not found"})
+		return
+	}
+
+	// Ensure orgIDValue is a string before converting
+	orgIDStr, ok := orgIDValue.(string)
+	if !ok {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid Organisation ID format"})
+		return
+	}
+
+	// Convert string to primitive.ObjectID
+	orgID, _ := primitive.ObjectIDFromHex(orgIDStr)
+
+	exams, err := examRepo.GetExams(orgID)
 	if err != nil {
 		log.Println("Error fetching exams:", err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch exams"})

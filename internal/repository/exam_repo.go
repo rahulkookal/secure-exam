@@ -20,12 +20,13 @@ func (repo *MongoRepository) Create(exam *model.Exam) error {
 	return err
 }
 
-func (repo *MongoRepository) GetExams() ([]model.Exam, error) {
+func (repo *MongoRepository) GetExams(orgID primitive.ObjectID) ([]model.Exam, error) {
 	var exams []model.Exam
+	filter := bson.M{"is_deleted": false, "organisation_id": orgID}
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	cursor, err := repo.collection.Find(ctx, bson.M{})
+	cursor, err := repo.collection.Find(ctx, filter)
 	if err != nil {
 		log.Println("MongoDB Find() error:", err)
 		return nil, err

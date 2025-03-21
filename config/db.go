@@ -22,9 +22,9 @@ func ConnectMongo() *mongo.Client {
 
 		// Default value if MONGO_URL is not set
 		if mongoURL == "" {
-			mongoURL = "mongodb://root:example@localhost:27017/?authSource=admin"
+			mongoURL = "mongodb+srv://secure-admin:Admin123%21@secureexam.v43yx.mongodb.net/?retryWrites=true&w=majority&appName=SecureExam"
 		}
-
+		fmt.Println("MongoDB URL:", mongoURL)
 		serverAPI := options.ServerAPI(options.ServerAPIVersion1)
 		opts := options.Client().ApplyURI(mongoURL).SetServerAPIOptions(serverAPI)
 

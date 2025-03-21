@@ -1,0 +1,2 @@
+GET http://localhost:8080/organisation/all
+Content-Type: application/json

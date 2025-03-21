@@ -4,9 +4,13 @@ Content-Type: application/json
 {
   "first_name": "John",
   "last_name": "Doe",
-  "email": "john.doe1@example.com",
+  "email": "john.st7@example.com",
   "password": "SecureP@ssw0rd",
   "verified": false,
   "mobile": "+1234567890",
-  "is_admin": false
+  "role": "STUDENT",
+  "organisation_id": "67dc54745605857676725d87",
+  "is_deleted": false,
+  "registration_id": "ST001"
 }
+

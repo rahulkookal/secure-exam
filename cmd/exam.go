@@ -43,6 +43,7 @@ func runServer() {
 	routes.RegisterExamRoutes(server)
 	routes.RegisterUserRoutes(server)
 	routes.RegisterEventRoutes(server)
+	routes.RegisterOrganisationRoutes(server)
 
 	server.Run(":8080")
 }
