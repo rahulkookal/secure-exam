@@ -34,12 +34,14 @@ jobs:
       - name: Upload Lambda ZIP to S3
         run: |
           aws s3 cp my-lambda.zip s3://secure-exam-lambda-bucket/
+      - name: Debug - List files
+        run: ls -R
 
       - name: Deploy CloudFormation Stack
         run: |
           aws cloudformation deploy \
             --stack-name secure-exam-stack \
-            --template-file cloudformation.yaml \
+            --template-file ./cloudformation.yaml \
             --capabilities CAPABILITY_NAMED_IAM \
             --parameter-overrides \
               LambdaS3Bucket=secure-exam-lambda-bucket \
