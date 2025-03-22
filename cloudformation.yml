@@ -1,8 +1,10 @@
+AWSTemplateFormatVersion: "2010-09-09"
 Resources:
+  # IAM Role for Lambda Execution
   LambdaExecutionRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: SecureExamLambdaExecutionRole
+      RoleName: GoLambdaExecutionRole
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -13,37 +15,81 @@ Resources:
             Action:
               - sts:AssumeRole
       Policies:
-        - PolicyName: SecureExamLambdaPolicy
+        - PolicyName: LambdaBasicExecution
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
               - Effect: Allow
                 Action:
-                  - s3:GetObject
-                  - s3:PutObject
-                  - s3:ListBucket
-                Resource: 
-                  - "arn:aws:s3:::secure-exam-lambda-bucket"
-                  - "arn:aws:s3:::secure-exam-lambda-bucket/*"
-              - Effect: Allow
-                Action:
                   - logs:CreateLogGroup
                   - logs:CreateLogStream
                   - logs:PutLogEvents
-                Resource: "arn:aws:logs:*:*:*"
-              - Effect: Allow
-                Action:
-                  - lambda:InvokeFunction
                 Resource: "*"
 
-  SecureExamLambda:
+  # Lambda Function
+  GoLambdaFunction:
     Type: AWS::Lambda::Function
     Properties:
-      FunctionName: SecureExamLambda
-      Handler: main  # Ensure this is correct for your Go application
-      Role: !GetAtt LambdaExecutionRole.Arn   # ✅ Correct reference to IAM Role
-      Code:
-        S3Bucket: secure-exam-lambda-bucket
-        S3Key: my-lambda.zip
+      FunctionName: GoLambdaApi
       Runtime: go1.x
-      Timeout: 30
+      Handler: main
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        S3Bucket: secure-exam-lambda-bucket  # Upload deployment.zip here
+        S3Key: my-lambda.zip
+      MemorySize: 128
+      Timeout: 10
+
+  # API Gateway
+  ApiGateway:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: GoLambdaApiGateway
+
+  # API Gateway Resource
+  ApiResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref ApiGateway
+      ParentId: !GetAtt ApiGateway.RootResourceId
+      PathPart: "{proxy+}"
+
+  # API Gateway Method (ANY)
+  ApiMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ApiGateway
+      ResourceId: !Ref ApiResource
+      HttpMethod: ANY
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: 
+          Fn::Sub: 
+            - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaArn}/invocations"
+            - LambdaArn: !GetAtt GoLambdaFunction.Arn
+
+  # API Gateway Deployment
+  ApiDeployment:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      RestApiId: !Ref ApiGateway
+      StageName: prod
+    DependsOn: ApiMethod
+
+  # Lambda Permission for API Gateway
+  LambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref GoLambdaFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: 
+        Fn::Sub: "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGateway}/*"
+
+Outputs:
+  ApiUrl:
+    Description: "API Gateway Invoke URL"
+    Value: 
+      Fn::Sub: "https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/prod/"

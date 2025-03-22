@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"os"
 	"time"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -32,25 +32,18 @@ func main() {
 	routes.RegisterEventRoutes(server)
 	routes.RegisterOrganisationRoutes(server)
 
-	// Convert Gin to AWS Lambda Proxy
-	ginLambda = ginadapter.New(server)
-
-	// If running locally, start normally
 	if isLocal() {
 		server.Run(":8080")
 	} else {
-		// Run as AWS Lambda function
+		// Initialize ginLambda only for AWS Lambda
+		ginLambda = ginadapter.New(server)
 		lambda.Start(Handler)
 	}
 }
 
 // AWS Lambda Handler
-func Handler(req interface{}) (interface{}, error) {
-	// Type assertion to APIGatewayProxyRequest
-	if request, ok := req.(events.APIGatewayProxyRequest); ok {
-		return ginLambda.Proxy(request)
-	}
-	return nil, fmt.Errorf("invalid request type")
+func Handler(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	return ginLambda.Proxy(req)
 }
 
 // Logging Middleware
@@ -76,6 +69,5 @@ func LogrusLogger() gin.HandlerFunc {
 
 // Helper to check if running locally
 func isLocal() bool {
-	// Set to `false` in production
-	return true
+	return os.Getenv("AWS_LAMBDA_FUNCTION_NAME") == ""
 }
