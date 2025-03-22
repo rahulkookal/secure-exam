@@ -1,52 +1,35 @@
-name: Deploy Lambda via CloudFormation
+name: Build and Push to ECR
 
 on:
   push:
     branches:
-      - master  # Trigger deployment when code is pushed to `main` branch
+      - master  # Change to your default branch if needed
 
 jobs:
-  deploy:
-    name: Build & Deploy Lambda
+  build-and-push:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-      - name: Set Up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: 1.21  # Adjust to your Go version
-
-      - name: Build Go Binary
-        run: |
-          GOOS=linux GOARCH=amd64 go build -o main main.go
-          zip my-lambda.zip main
-
-      - name: Configure AWS Credentials
+      - name: Set Up AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-south-1  # Update to your AWS region (e.g., Mumbai)
+          aws-region: ap-south-1  # Change to your AWS region
 
-      - name: Upload Lambda ZIP to S3
-        run: |
-          aws s3 cp my-lambda.zip s3://secure-exam-lambda-bucket/
-      - name: Debug - List files
-        run: ls -R
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Deploy CloudFormation Stack
-        run: |
-          aws cloudformation deploy \
-            --stack-name secure-exam-stack \
-            --template-file ./cloudformation.yml \
-            --capabilities CAPABILITY_NAMED_IAM \
-            --parameter-overrides \
-              LambdaS3Bucket=secure-exam-lambda-bucket \
-              LambdaS3Key=my-lambda.zip
+      - name: Build and Push Docker Image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: exam-hive  # Change to your repository name
+          IMAGE_TAG: latest  # You can use Git SHA with `IMAGE_TAG=${{ github.sha }}` for versioning
 
-      - name: Verify Deployment
         run: |
-          aws cloudformation describe-stacks --stack-name secure-exam-stack
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
