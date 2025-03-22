@@ -1,4 +1,4 @@
-name: Build and Push to ECR
+name: Build, Push to ECR, and Deploy to EC2
 
 on:
   push:
@@ -31,7 +31,7 @@ jobs:
           IMAGE_TAG: latest
         run: |
           docker compose build
-          docker images  # 👈 List all images to check if go-app:latest exists
+          docker images
           docker tag go-app:latest $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
       - name: Push Docker Image to ECR
@@ -40,5 +40,32 @@ jobs:
           ECR_REPOSITORY: go-nginx-app
           IMAGE_TAG: latest
         run: |
-          docker images  # 👈 List images again before pushing
+          docker images
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set Up AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Deploy CloudFormation Stack
+        env:
+          STACK_NAME: go-nginx-app
+          TEMPLATE_FILE: cloudformation.yaml
+          KEY_PAIR_NAME: my-key-pair  # Update with your key pair name
+        run: |
+          aws cloudformation deploy \
+            --stack-name $STACK_NAME \
+            --template-file $TEMPLATE_FILE \
+            --parameter-overrides KeyPairName=$KEY_PAIR_NAME \
+            --capabilities CAPABILITY_NAMED_IAM

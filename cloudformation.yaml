@@ -1,0 +1,56 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Deploy a Go + Nginx app on EC2 using Docker"
+
+Parameters:
+  InstanceType:
+    Type: String
+    Default: t2.micro
+    Description: "EC2 instance type"
+
+  KeyPairName:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: "Key pair name to SSH into EC2"
+
+  ECRRepository:
+    Type: String
+    Default: "123456789012.dkr.ecr.ap-south-1.amazonaws.com/go-nginx-app:latest"
+    Description: "ECR repository URL of the Go + Nginx Docker image"
+
+Resources:
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref KeyPairName
+      ImageId: ami-0c55b159cbfafe1f0  # Update with latest Amazon Linux 2 AMI ID
+      SecurityGroups:
+        - !Ref InstanceSecurityGroup
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          sudo yum update -y
+          sudo yum install -y docker
+          sudo service docker start
+          sudo usermod -aG docker ec2-user
+          aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin ${ECRRepository%:*}
+          docker pull ${ECRRepository}
+          docker run -d -p 80:80 ${ECRRepository}
+
+  InstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "Allow HTTP and SSH access"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0  # Change this to restrict SSH access
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0  # Allow HTTP traffic
+
+Outputs:
+  WebsiteURL:
+    Description: "Public URL of the deployed Go + Nginx app"
+    Value: !Sub "http://${EC2Instance.PublicDnsName}"
