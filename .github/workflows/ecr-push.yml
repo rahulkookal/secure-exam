@@ -3,7 +3,7 @@ name: Build and Push to ECR
 on:
   push:
     branches:
-      - exam  # Change if needed
+      - main
 
 jobs:
   build-and-push:
@@ -31,6 +31,7 @@ jobs:
           IMAGE_TAG: latest
         run: |
           docker compose build
+          docker images  # 👈 List all images to check if go-app:latest exists
           docker tag go-app:latest $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
       - name: Push Docker Image to ECR
@@ -39,4 +40,5 @@ jobs:
           ECR_REPOSITORY: go-nginx-app
           IMAGE_TAG: latest
         run: |
+          docker images  # 👈 List images again before pushing
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
