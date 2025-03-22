@@ -41,7 +41,7 @@ jobs:
         run: |
           aws cloudformation deploy \
             --stack-name secure-exam-stack \
-            --template-file ./cloudformation.yaml \
+            --template-file ./cloudformation.yml \
             --capabilities CAPABILITY_NAMED_IAM \
             --parameter-overrides \
               LambdaS3Bucket=secure-exam-lambda-bucket \
