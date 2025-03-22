@@ -1,0 +1,22 @@
+Parameters:
+  LambdaS3Bucket:
+    Type: String
+    Default: secure-exam-lambda-bucket
+
+  LambdaS3Key:
+    Type: String
+    Default: my-lambda.zip
+
+Resources:
+  MyLambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: SecureExamLambda
+      Runtime: go1.x
+      Handler: main
+      Code:
+        S3Bucket: !Ref LambdaS3Bucket
+        S3Key: !Ref LambdaS3Key
+      MemorySize: 128
+      Timeout: 10
+      Role: !GetAtt LambdaExecutionRole.Arn
