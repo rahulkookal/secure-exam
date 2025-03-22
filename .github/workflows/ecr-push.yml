@@ -30,7 +30,7 @@ jobs:
           ECR_REPOSITORY: go-nginx-app
           IMAGE_TAG: latest
         run: |
-          docker-compose build
+          docker compose build
           docker tag go-app:latest $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
       - name: Push Docker Image to ECR
