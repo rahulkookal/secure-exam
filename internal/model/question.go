@@ -10,6 +10,7 @@ type Question struct {
 	QuestionText   string             `bson:"question_text" json:"question_text" binding:"required"`
 	Options        []string           `bson:"options" json:"options" binding:"required"`
 	CorrectAnswers []string           `bson:"correct_answers" json:"correct_answers" binding:"required"` // Changed to string array
+	Answers        []string           `bson:"answers" json:"answers"`
 	IsMultiSelect  bool               `bson:"is_multi_select" json:"is_multi_select"`
 	IsDeleted      bool               `bson:"is_deleted" json:"is_deleted"`
 }

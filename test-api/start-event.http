@@ -1,8 +1,7 @@
-POST http://localhost:8080/event
+PUT http://localhost:8080/event
 Content-Type: application/json
 authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG4uc3RAZXhhbXBsZS5jb20iLCJleHAiOjE3NDI3Mjg0NzUsIm9yZ2FuaXNhdGlvbl9pZCI6IjY3ZGM1NDc0NTYwNTg1NzY3NjcyNWQ4OCIsInJvbGUiOiJTVFVERU5UIiwidXNlcl9pZCI6IjY3ZGU5OTYzNzc1Y2Q4YTBkMDdlZjgwNyJ9.LSTCqXtf74L-wKYgcWpcjwDV3fkwwg-Q6VfSA3we5S4
 
 {
-  "exam_id": "67de99a9775cd8a0d07ef808",
-  "registration_id": "ST001"
+  "id": "67de9c3b55bb451a5441a670"
 }

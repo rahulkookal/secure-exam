@@ -34,3 +34,21 @@ func (repo *MongoRepository) UpdateQuestion(question *model.Question) error {
 	_, err := repo.collection.UpdateOne(ctx, filter, update)
 	return err
 }
+func (repo *MongoRepository) FindQuestionsByExamID(examID primitive.ObjectID) ([]model.Question, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	filter := bson.M{"exam_id": examID, "is_deleted": false}
+	cursor, err := repo.collection.Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
+	var questions []model.Question
+	if err = cursor.All(ctx, &questions); err != nil {
+		return nil, err
+	}
+
+	return questions, nil
+}
