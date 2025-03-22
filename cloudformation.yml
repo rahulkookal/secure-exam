@@ -1,22 +1,49 @@
-Parameters:
-  LambdaS3Bucket:
-    Type: String
-    Default: secure-exam-lambda-bucket
-
-  LambdaS3Key:
-    Type: String
-    Default: my-lambda.zip
-
 Resources:
-  MyLambdaFunction:
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: SecureExamLambdaExecutionRole
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: 
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: SecureExamLambdaPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                  - s3:ListBucket
+                Resource: 
+                  - "arn:aws:s3:::secure-exam-lambda-bucket"
+                  - "arn:aws:s3:::secure-exam-lambda-bucket/*"
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: "arn:aws:logs:*:*:*"
+              - Effect: Allow
+                Action:
+                  - lambda:InvokeFunction
+                Resource: "*"
+
+  SecureExamLambda:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: SecureExamLambda
-      Runtime: go1.x
-      Handler: main
+      Handler: main  # Ensure this is correct for your Go application
+      Role: !GetAtt LambdaExecutionRole.Arn   # ✅ Correct reference to IAM Role
       Code:
-        S3Bucket: !Ref LambdaS3Bucket
-        S3Key: !Ref LambdaS3Key
-      MemorySize: 128
-      Timeout: 10
-      Role: !GetAtt LambdaExecutionRole.Arn
+        S3Bucket: secure-exam-lambda-bucket
+        S3Key: my-lambda.zip
+      Runtime: go1.x
+      Timeout: 30
