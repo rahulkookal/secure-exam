@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 
@@ -22,6 +23,8 @@ func (repo *MongoRepository) Create(exam *model.Exam) error {
 
 func (repo *MongoRepository) GetExams(orgID primitive.ObjectID) ([]model.Exam, error) {
 	var exams []model.Exam
+	fmt.Println("=====")
+	fmt.Println(orgID)
 	filter := bson.M{"is_deleted": false, "organisation_id": orgID}
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
