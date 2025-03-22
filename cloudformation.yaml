@@ -32,9 +32,13 @@ Resources:
           sudo yum install -y docker
           sudo service docker start
           sudo usermod -aG docker ec2-user
-          aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin ${ECRRepository%:*}
-          docker pull ${ECRRepository}
-          docker run -d -p 80:80 ${ECRRepository}
+
+          ECR_REGISTRY="${ECRRepository%:*}"  # Extract registry URL
+          ECR_IMAGE="${ECRRepository}"        # Full image URL
+
+          aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin $ECR_REGISTRY
+          docker pull $ECR_IMAGE
+          docker run -d -p 80:80 $ECR_IMAGE
 
   InstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
